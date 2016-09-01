@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE tsung SYSTEM "/usr/local/share/tsung/tsung-1.0.dtd">
+
+<tsung loglevel="debug" dumptraffic="false" version="1.0">
+  <clients>
+    <client host="localhost" use_controller_vm="true"/>
+  </clients>
+  <!-- Server side setup -->
+  <servers>
+    <server host="10.136.55.27" port="8000" type="tcp"/>
+  </servers>
+  <load>
+    <arrivalphase phase="1" duration="1" unit="minute">
+      <users maxnumber="100" interarrival="1" unit="second"/>
+    </arrivalphase>
+  </load>
+  <sessions>
+    <session probability="100" name="qmsg-example" type="ts_qmsg">
+      <request>
+        <qmsg uid="1" ack="parse">0a0633333233373812046861686118200a</qmsg>
+      </request>
+    </session>
+  </sessions>
+</tsung>
