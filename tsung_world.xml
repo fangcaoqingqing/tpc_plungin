@@ -10,15 +10,21 @@
     <server host="10.136.55.27" port="8000" type="tcp"/>
   </servers>
   <load>
-    <arrivalphase phase="1" duration="1" unit="minute">
-      <users maxnumber="100" interarrival="1" unit="second"/>
-    </arrivalphase>
+  <!-- several arrival phases can be set: for each phase, you can set
+  the mean inter-arrival time between new clients and the phase
+  duration -->
+   <arrivalphase phase="1" duration="2" unit="minute">
+      <users maxnumber="1" interarrival="1" unit="second"/>
+   </arrivalphase>
   </load>
   <sessions>
     <session probability="100" name="qmsg-example" type="ts_qmsg">
+   <for from="1" to="10000" incr="1" var="counter">
       <request>
-        <qmsg uid="1" ack="parse">0a0633333233373812046861686118200a</qmsg>
+        <qmsg uid="1" ack="parse">v</qmsg>
       </request>
+ </for>
     </session>
   </sessions>
+
 </tsung>

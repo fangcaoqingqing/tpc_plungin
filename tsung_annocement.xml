@@ -22,7 +22,7 @@
   <!-- several arrival phases can be set: for each phase, you can set
   the mean inter-arrival time between new clients and the phase
   duration -->
-   <arrivalphase phase="1" duration="20" unit="minute">
+   <arrivalphase phase="1" duration="3" unit="minute">
      <users arrivalrate="50" unit="second"></users>
    </arrivalphase>
   </load>

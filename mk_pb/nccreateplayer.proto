@@ -1,0 +1,6 @@
+message NcCreatePlayer
+{
+	required int32 Sex = 1;							// 性别
+	required int32 Clazz = 2;							// 职业
+	required string Name = 3;							// 名称
+}

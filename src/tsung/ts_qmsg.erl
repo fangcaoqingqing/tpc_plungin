@@ -48,17 +48,24 @@ new_session() ->
 %% Returns: binary
 %%----------------------------------------------------------------------
 get_message(#qmsg_request{uid = StrUid, data = Data}, #state_rcv{session = S})->
-    MsgBin = list_to_binary(Data),
+    _MsgBin = list_to_binary(Data),
+    ?LOGF("get_message ~p",Data,?DEB),
+%    {ok,F}=file:read_file("/root/tsung_plugin_demo/mk_pb/nclogin",read),
+%    {ok,F}=file:read_file("/root/tsung_plugin_demo/mk_pb/nclogin"),
+    F = <<10,24,53,55,98,53,53,52,99,50,101,52,98,48,53,55,97,48,53,101,49,48,52,53,52,56,18,64,52,69,84,73,105,71,119,80,67,76,120,98,117,99,67,76,110,82,99,81,89,85,117,122,87,71,76,53,113,73,113,49,65,107,69,55,100,48,80,50,119,84,67,51,85,114,66,50,77,69,103,51,88,78,97,73,52,109,83,57,87,88,110,79,24,1>>,
+    ?LOGF("get_message F~p",F,?DEB),
     Uid = case is_list(StrUid) of
               true -> list_to_integer(StrUid);
               false -> StrUid
           end,
-    ReqBody = <<Uid:32/integer, MsgBin/binary>>,
+    ReqBody = <<Uid:32/little, F/binary>>,
     BodyLen = byte_size(ReqBody),
-    ReqBin = <<BodyLen:32/big, ReqBody/binary>>,
+    ReqBin = <<BodyLen:32/little, ReqBody/binary>>,
+    AllLen = byte_size(ReqBin),
+    TranBin = <<AllLen:32/little, ReqBody/binary>>,
     io:format("ts_qmsg.erl  get_messge  ReqBin!!!~w~n",[ReqBin]),
-    ?LOGF("qmsg_request encode result : ~p", [{"ts_qmsg.erl  get_message  **##", Uid, Data, "##**"}], ?DEB),
-    {ReqBin, S}.
+    ?LOGF("qmsg_request encode result : ~p", [{"ts_qmsg.erl  get_message   Uid, Data, "}], ?DEB),
+    {TranBin, S}.
 
 %%----------------------------------------------------------------------
 %% Function: parse/2
@@ -69,6 +76,7 @@ parse(closed, State) ->
     ?LOGF("qmsg_response got closed", [], ?DEB),
     {State#state_rcv{ack_done = true, datasize = 0}, [], true};
 parse(<<Len:32/big, LeftBin/binary>> = Data, State = #state_rcv{datasize = DataSize}) ->
+    io:format("data:~w~n",[Data]),
     io:format("datasize:~w~n",[DataSize]),
     <<Uid:32/integer, Random:32/integer>> = LeftBin,
 
@@ -85,8 +93,8 @@ parse(<<Len:32/big, LeftBin/binary>> = Data, State = #state_rcv{datasize = DataS
     NewDataSize = DataSize + Len + 4,
     {State#state_rcv{ack_done = AckResult, acc = [], datasize = NewDataSize}, [], false};
 parse(Data, State) ->
-    io:format("ts_qmsg.erl parse :parse Data ~w~n",[Data]),
-    io:format("ts_qmsg.erl parse :parse State ~w~n",[State]),
+    %%io:format("ts_qmsg.erl parse :parse Data ~w~n",[Data]),
+    %%io:format("ts_qmsg.erl parse :parse State ~w~n",[State]),
     ?LOGF("qmsg_response got unmatched data : ~p", [Data], ?DEB),
     {State, [], false}.
 

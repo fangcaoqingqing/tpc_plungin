@@ -1,0 +1,6 @@
+message NcLogin
+{
+        required string         AccountId               =       1;              // 账号id
+        required string         SessionId               =       2;              // 登陆服务器分配的sessionid
+        required int32          ServerId                =       3;              // 服务器id
+}
